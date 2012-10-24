@@ -18,7 +18,7 @@ HEADERS += src/configwindow.h src/mainwindow.h src/authmsgwindow.h
 SOURCES += src/configwindow.cpp src/main.cpp src/mainwindow.cpp src/authmsgwindow.cpp
 
 OTHER_FILES += \
-    images/gmentohust.png
+    README.md
 
 RESOURCES += \
     images/images.qrc
