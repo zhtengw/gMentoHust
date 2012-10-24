@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>gentohust.png</file>
+    </qresource>
+</RCC>
