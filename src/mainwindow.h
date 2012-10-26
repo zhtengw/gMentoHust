@@ -52,6 +52,11 @@ private slots:
     void saveID(int state);
 
 private:
+    //functions to encrypt and decrypt password
+    QString getXorEncryptDecrypt(const QString &str, const char &key);
+    QString byteToQString(const QByteArray &byte);
+    QByteArray qstringToByte(const QString &strInfo);
+
     QLabel *netid;
     QLabel *passwd;
     QLineEdit *idEdit;

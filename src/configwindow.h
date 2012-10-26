@@ -40,11 +40,14 @@ public:
     friend class MainWindow;
 
 private slots:
+    void cancelClicked();
     void confirmClicked();
     void showNetCards();
     void saveNetCard(const QString name);
     void saveMulAdr(const int index);
     void saveDispNotif(const QString time);
+    void saveDhcpType(const int index);
+    void saveAuthTimeOut(const QString time);
 
 private:
     //void createNetCardSelect();
@@ -54,20 +57,32 @@ private:
 
     QPushButton *confirmButton;
     QPushButton *cancelButton;
-    QTextEdit *temp;
 
     QLabel *netCardName;
     QProcess *getNetCard;
     QComboBox *netCardSelect;
     QStringList *netCardArg;
+    QString *CVNetCard;         // save current of net card
 
     QLabel *mulCastAdrName;
     QComboBox *mulCastAdr;
     QStringList *mulCastAdrArg;
+    int CVMulAdr;               // save current value of mulcast address
 
     QLabel *dispNotif;
     QLineEdit *dispNotifTime;
     QStringList *dispNotifArg;
+    QString *CVDispNotif;       // save current value of display notification
+
+    QLabel *dhcpTypeName;
+    QComboBox *dhcpType;
+    QStringList *dhcpTypeArg;
+    int CVDhcpType;             // save current value of DHCP type
+
+    QLabel *authTimeOutName;
+    QLineEdit *authTimeOut;
+    QStringList *authTimeOutArg;
+    QString *CVAuthTO;          // save current value of authenticate timeout
 };
 
 #endif // CONFIGWINDOW_H

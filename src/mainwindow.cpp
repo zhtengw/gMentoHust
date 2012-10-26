@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     pdEdit = new QLineEdit;
     pdEdit->setEchoMode(QLineEdit::Password);
     passwd->setBuddy(pdEdit);
-    pdEdit->setText(setting.value("password","").toString());
+    pdEdit->setText(getXorEncryptDecrypt(setting.value("password","").toString(),111));
 
     rembCheckBox = new QCheckBox(tr("Remember for next authification"));
 
@@ -113,6 +113,7 @@ void MainWindow::authClicked()
 {
     QString tempid = idEdit->text();
     QString temppd = pdEdit->text();
+    if(rembCheckBox->isChecked()){saveID(2);}
 
     authMW->setArgs(tempid, temppd);
     confW->setArgs();
@@ -128,6 +129,7 @@ void MainWindow::authClicked()
 void MainWindow::enableAuthButton(const QString &text)
 {
     authButton->setEnabled(!(pdEdit->text().isEmpty()||idEdit->text().isEmpty()));
+    //authButton->setEnabled(!text.isEmpty());
 }
 
 void MainWindow::createCfgWd()
@@ -150,6 +152,41 @@ void MainWindow::saveID(int state)
         //QMessageBox::information(this,tr("ss"),tr("I'm checked!"));
         QSettings setting("Aten","Gmentohust");
         setting.setValue("netid",idEdit->text());
-        setting.setValue("password",pdEdit->text());
+        setting.setValue("password",getXorEncryptDecrypt(pdEdit->text(),111));
     }
+}
+
+QString MainWindow::getXorEncryptDecrypt(const QString &str, const char &key)
+{
+  QString result;
+  QByteArray bs = qstringToByte(str);
+
+  for(int i=0; i<bs.size(); i++){
+    bs[i] = bs[i] ^ key;
+  }
+
+  result = byteToQString(bs);
+  return result;
+}
+
+QString MainWindow::byteToQString(const QByteArray &byte)
+{
+  QString result;
+  if(byte.size() > 0){
+    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+    result = codec->toUnicode(byte);
+  }
+
+  return result;
+}
+
+QByteArray MainWindow::qstringToByte(const QString &strInfo)
+{
+  QByteArray result;
+  if(strInfo.length() > 0){
+    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+    result = codec->fromUnicode(strInfo);
+  }
+
+  return result;
 }
