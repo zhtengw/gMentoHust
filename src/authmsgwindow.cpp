@@ -1,3 +1,21 @@
+/***************************************************************************
+ *  Copyright (c) 2012 by Aten Zhang <atenzd@gmail.com>                    *
+ *                                                                         *
+ *  This file is part of gMentoHust.                                       *
+ *                                                                         *
+ *  gMentoHust is free software: you can redistribute it and/or modify     *
+ *  it under the terms of the GNU General Public License as published by   *
+ *  the Free Software Foundation, either version 3 of the License, or      *
+ *  (at your option) any later version.                                    *
+ *                                                                         *
+ *  gMentoHust is distributed in the hope that it will be useful,          *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+ *  GNU General Public License for more details.                           *
+ *                                                                         *
+ *  You should have received a copy of the GNU General Public License      *
+ *  along with gMentoHust.  If not, see <http://www.gnu.org/licenses/>.    *
+ ***************************************************************************/
 #include <QtGui>
 #include <QProcess>
 
@@ -11,7 +29,7 @@ AuthMsgWindow::AuthMsgWindow(QWidget *parent)
     miniButton = new QPushButton(tr("Minimize"));
     authMsg = new QTextEdit;
     args = new QStringList;
-    sysTrayIcon = new QSystemTrayIcon(QIcon(":/mentohust.png"));
+    sysTrayIcon = new QSystemTrayIcon(QIcon(":/gmentohust.png"));
 
     trayActions();
     createTrayMenu();
@@ -41,7 +59,7 @@ AuthMsgWindow::AuthMsgWindow(QWidget *parent)
     backend = new QProcess(this);
     backend->setProcessChannelMode(QProcess::MergedChannels);
     connect(backend, SIGNAL(readyReadStandardOutput()), this, SLOT(readresult()));
-    connect(this, SIGNAL(authMWhidden()), authMsg, SLOT(clear()));
+    //connect(this, SIGNAL(authMWhidden()), authMsg, SLOT(clear()));
     //connect(backend, SIGNAL(started()), this, SLOT(readresult()));
 
     //backend->start("mentohust", *args);
@@ -62,11 +80,9 @@ void AuthMsgWindow::readresult()
 void AuthMsgWindow::setArgs(const QString &id, const QString &pd)
 {
 
-    QStringList idargs = QStringList() << "-u" << id;
-    QStringList pdargs = QStringList() << "-p" << pd;
-    QString idarg = idargs.join("");
-    QString pdarg = pdargs.join("");
-    *args = QStringList() << idarg << pdarg ;
+    QStringList idarg = QStringList() << "-u" << id;
+    QStringList pdarg = QStringList() << "-p" << pd;
+    *args = QStringList() << idarg.join("") << pdarg.join("") ;
     //args = rembCheckBox->isChecked() ? args : args << "-w" ;
 
 }
@@ -75,8 +91,11 @@ void AuthMsgWindow::exitClicked()
 {
     QProcess *exitMTH = new QProcess;
     exitMTH->start("mentohust -k");
+    delete exitMTH;
     if(!this->isHidden())this->hide();
-    emit authMWhidden();
+    //emit authMWhidden();
+    delete this->sysTrayIcon;
+    delete this;
 }
 
 void AuthMsgWindow::miniClicked()
@@ -114,9 +133,9 @@ void AuthMsgWindow::trayIconAct(QSystemTrayIcon::ActivationReason reason)
 void AuthMsgWindow::showMessage()
 {
     QStringList allMessage=QString(authMsg->toPlainText()).split("\n",QString::SkipEmptyParts);
-    QStringList temp = QStringList() << allMessage.at(allMessage.size()-2) << allMessage.last();
-    QString message = temp.join("\n");
-    sysTrayIcon->showMessage(tr("MenToHust"), message,QSystemTrayIcon::Information,5000);
+    QStringList tempmsg = QStringList() << allMessage.at(allMessage.size()-2) << allMessage.last();
+    QString message = tempmsg.join("\n");
+    sysTrayIcon->showMessage(tr("MentoHust"), message,QSystemTrayIcon::Information,5000);
 }
 
 void AuthMsgWindow::trayActions()

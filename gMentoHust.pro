@@ -10,6 +10,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = gMentoHust
 TEMPLATE = app
+VERSION = 1.0
+
+INSTALL_ROOT = $$DESTDIR
 DEPENDPATH += . src
 INCLUDEPATH += . src
 
@@ -17,9 +20,16 @@ INCLUDEPATH += . src
 HEADERS += src/configwindow.h src/mainwindow.h src/authmsgwindow.h
 SOURCES += src/configwindow.cpp src/main.cpp src/mainwindow.cpp src/authmsgwindow.cpp
 
-OTHER_FILES += \
-    README.md
-
 RESOURCES += \
     images/images.qrc
 
+OTHER_FILES += \
+    README \
+    COPYING \
+    AUTHORS \
+    TODO
+
+unix {
+    target.path = /usr/bin
+    INSTALLS += target
+}

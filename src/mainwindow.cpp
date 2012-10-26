@@ -1,3 +1,21 @@
+/***************************************************************************
+ *  Copyright (c) 2012 by Aten Zhang <atenzd@gmail.com>                    *
+ *                                                                         *
+ *  This file is part of gMentoHust.                                       *
+ *                                                                         *
+ *  gMentoHust is free software: you can redistribute it and/or modify     *
+ *  it under the terms of the GNU General Public License as published by   *
+ *  the Free Software Foundation, either version 3 of the License, or      *
+ *  (at your option) any later version.                                    *
+ *                                                                         *
+ *  gMentoHust is distributed in the hope that it will be useful,          *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+ *  GNU General Public License for more details.                           *
+ *                                                                         *
+ *  You should have received a copy of the GNU General Public License      *
+ *  along with gMentoHust.  If not, see <http://www.gnu.org/licenses/>.    *
+ ***************************************************************************/
 #include <QtGui>
 
 #include "mainwindow.h"
@@ -11,8 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
      QSettings setting("Aten","Gmentohust");
 
 
-    authMW = new AuthMsgWindow;
-    confW = new ConfigWindow;
+    //authMW = new AuthMsgWindow;
+    //confW = new ConfigWindow;
     netid = new QLabel(tr("NetID:"));
     idEdit = new QLineEdit;
     netid->setBuddy(idEdit);
@@ -33,15 +51,17 @@ MainWindow::MainWindow(QWidget *parent)
     closeButton = new QPushButton(tr("Close"));
     configButton = new QPushButton(tr("Configure"));
 
+    createAuthMW();
+    createCfgWd();
+
     enableAuthButton("");
     connect(pdEdit, SIGNAL(textChanged(const QString&)), this, SLOT(enableAuthButton(const QString&)));
     connect(idEdit, SIGNAL(textChanged(const QString&)), this, SLOT(enableAuthButton(const QString&)));
 
-    connect(authButton, SIGNAL(clicked()), this, SLOT(authClicked()));
-    connect(authButton, SIGNAL(clicked()), this, SLOT(hide()));
+
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
-    connect(configButton, SIGNAL(clicked()), confW, SLOT(show()));
-    connect(authMW, SIGNAL(authMWhidden()), this, SLOT(showAndHideIcon()));
+    //connect(configButton,SIGNAL(clicked()),this,SLOT(openCfgWd()));
+
     connect(rembCheckBox, SIGNAL(stateChanged(int)), this, SLOT(saveID(int)));
 
     QHBoxLayout *topLeftLayout = new QHBoxLayout;
@@ -79,13 +99,24 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::createAuthMW()
+{
+
+    authMW = new AuthMsgWindow;
+    connect(authButton, SIGNAL(clicked()), this, SLOT(authClicked()));
+    connect(authButton, SIGNAL(clicked()), this, SLOT(hide()));
+    connect(authMW, SIGNAL(destroyed()), this, SLOT(show()));
+    connect(authMW, SIGNAL(destroyed()), this, SLOT(createAuthMW()));
+
+}
 void MainWindow::authClicked()
 {
     QString tempid = idEdit->text();
     QString temppd = pdEdit->text();
 
     authMW->setArgs(tempid, temppd);
-    authMW->backend->start("mentohust", *authMW->args);
+    confW->setArgs();
+    authMW->backend->start("mentohust", *authMW->args<<*confW->args);
     if (QSystemTrayIcon::isSystemTrayAvailable())
     {
         authMW->sysTrayIcon->show();
@@ -99,16 +130,17 @@ void MainWindow::enableAuthButton(const QString &text)
     authButton->setEnabled(!(pdEdit->text().isEmpty()||idEdit->text().isEmpty()));
 }
 
-void MainWindow::openCfgWd()
+void MainWindow::createCfgWd()
 {
-    ConfigWindow *c= new ConfigWindow;
-    c->show();
+    confW= new ConfigWindow;
+    connect(confW,SIGNAL(destroyed()),this,SLOT(createCfgWd()));
+    connect(configButton, SIGNAL(clicked()), confW, SLOT(show()));
 }
 
 void MainWindow::showAndHideIcon()
 {
     this->show();
-    authMW->sysTrayIcon->hide();
+    //authMW->sysTrayIcon->hide();
 }
 
 void MainWindow::saveID(int state)
