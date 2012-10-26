@@ -20,8 +20,16 @@
 #define CONFIGWINDOW_H
 
 #include <QDialog>
+#include <QMessageBox>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QProcess>
+#include <QSettings>
+#include <QPushButton>
+#include <QLabel>
+#include <QLayout>
 
-class QPushButton;
+/*class QPushButton;
 class QTextEdit;
 class QProcess;
 class QComboBox;
@@ -29,7 +37,7 @@ class QLabel;
 class QButtonGroup;
 class QCheckBox;
 class QString;
-class QLineEdit;
+class QLineEdit;*/
 
 class ConfigWindow : public QDialog
 {

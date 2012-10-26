@@ -21,13 +21,12 @@
 
 #include <QDialog>
 #include <QSystemTrayIcon>
-
-class QTextEdit;
-class QPushButton;
-class QProcess;
-class QString;
-class QIcon;
-class QMenu;
+#include <QTextEdit>
+#include <QPushButton>
+#include <QProcess>
+#include <QString>
+#include <QIcon>
+#include <QMenu>
 
 class AuthMsgWindow : public QDialog
 {

@@ -19,20 +19,18 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QProcess>
 
-#include <authmsgwindow.h>
-#include <configwindow.h>
+#include "authmsgwindow.h"
+#include "configwindow.h"
 
-class QCheckBox;
-class QLabel;
-class QLineEdit;
-class QPushButton;
-class QProcess;
-class AuthMsgWindow;
 
 class MainWindow : public QDialog //QMainWindow
 {
@@ -42,7 +40,6 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    friend class AuthMsgWindow;
 private slots:
     void createAuthMW();
     void authClicked();

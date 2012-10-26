@@ -17,11 +17,8 @@
  *  along with gMentoHust.  If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 #include <QApplication>
-#include <QLabel>
-#include <QPushButton>
-#include <QSettings>
+
 #include "mainwindow.h"
-#include "configwindow.h"
 
 int main(int argc, char *argv[])
 {

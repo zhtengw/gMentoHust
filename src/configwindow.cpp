@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License      *
  *  along with gMentoHust.  If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
-#include <QtGui>
+
 #include "configwindow.h"
 
 ConfigWindow::ConfigWindow(QWidget *parent)
