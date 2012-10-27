@@ -1,20 +1,20 @@
 /***************************************************************************
  *  Copyright (c) 2012 by Aten Zhang <atenzd@gmail.com>                    *
  *                                                                         *
- *  This file is part of gMentoHust.                                       *
+ *  This file is part of WarMtH.                                       *
  *                                                                         *
- *  gMentoHust is free software: you can redistribute it and/or modify     *
+ *  WarMtH is free software: you can redistribute it and/or modify     *
  *  it under the terms of the GNU General Public License as published by   *
  *  the Free Software Foundation, either version 3 of the License, or      *
  *  (at your option) any later version.                                    *
  *                                                                         *
- *  gMentoHust is distributed in the hope that it will be useful,          *
+ *  WarMtH is distributed in the hope that it will be useful,          *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
  *  GNU General Public License for more details.                           *
  *                                                                         *
  *  You should have received a copy of the GNU General Public License      *
- *  along with gMentoHust.  If not, see <http://www.gnu.org/licenses/>.    *
+ *  along with WarMtH.  If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 
 #include "configwindow.h"
@@ -23,7 +23,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
     : QDialog(parent)
 {
     // settings
-    QSettings setting("Aten","Gmentohust");
+    QSettings setting("WarMtH","warmth");
 
     //Widgets on configuration window
     // 1. Confirm and Exit buttons
@@ -62,8 +62,6 @@ ConfigWindow::ConfigWindow(QWidget *parent)
     netCardSelect->addItem(setting.value("netcard","").toString());
     connect(netCardSelect,SIGNAL(currentIndexChanged(QString)), this, SLOT(saveNetCard(QString)));
 
-    //edit->setText("aten");
-    //edit->setReadOnly(true);
 
     // 3. Mulcast address selection
     //CVMulAdr=0;
@@ -151,9 +149,104 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
     connect(authTimeOut,SIGNAL(textChanged(QString)), this, SLOT(saveAuthTimeOut(QString)));
 
-    //
+    // 7. max failure times
+    CVMaxFT = new QString;
+    maxFailTimesName= new QLabel(tr("Max failure times:"));
+    maxFailTimesName->setToolTip(tr("Times limit for failure[0 means no limit]."));
+    maxFailTimes = new QLineEdit;
+    maxFailTimesArg = new QStringList;
 
+    //line edit width
+    maxFailTimes->setMaximumWidth(57);
+    //set default value
+    maxFailTimes->setText(setting.value("maxfailtimes",8).toString());
+    *maxFailTimesArg = QStringList()<<"-l"<<setting.value("maxfailtimes",8).toString();
+    *CVMaxFT = setting.value("maxfailtimes",8).toString();
+    connect(maxFailTimes,SIGNAL(textChanged(QString)), this, SLOT(saveMaxFailTimes(QString)));
+
+    //set layout
+    QHBoxLayout *maxFailTimesLayout = new QHBoxLayout;
+    maxFailTimesLayout->addWidget(maxFailTimesName);
+    maxFailTimesLayout->addStretch();
+    maxFailTimesLayout->addWidget(maxFailTimes);
+
+    // 8. wait on failure timeout
+    CVWaitFTO = new QString;
+    waitFailTimeOutName= new QLabel(tr("Wait on failure timeout:"));
+    waitFailTimeOutName->setToolTip(tr("Seconds to wait on failure."));
+    waitFailTimeOut = new QLineEdit;
+    waitFailTimeOutArg = new QStringList;
+    QLabel *unitFTO = new QLabel(tr("s"));
+
+    //line edit width
+    waitFailTimeOut->setMaximumWidth(40);
+    //set default value
+    waitFailTimeOut->setText(setting.value("failtimeout",15).toString());
+    *waitFailTimeOutArg = QStringList()<<"-r"<<setting.value("failtimeout",15).toString();
+    *CVWaitFTO = setting.value("failtimeout",15).toString();
+
+    //set layout
+    QHBoxLayout *waitFailTimeOutLayout = new QHBoxLayout;
+    waitFailTimeOutLayout->addWidget(waitFailTimeOutName);
+    waitFailTimeOutLayout->addStretch();
+    waitFailTimeOutLayout->addWidget(waitFailTimeOut);
+    waitFailTimeOutLayout->addWidget(unitFTO);
+
+    connect(waitFailTimeOut,SIGNAL(textChanged(QString)), this, SLOT(saveWaitFailTimeOut(QString)));
+
+    // 9. heartbeat timeout
+    CVHeatBTO = new QString;
+    heartbeatTimeOutName= new QLabel(tr("Heartbeat timeout:"));
+    heartbeatTimeOutName->setToolTip(tr("Interval between sending two heartbeat packages."));
+    heartbeatTimeOut = new QLineEdit;
+    heartbeatTimeOutArg = new QStringList;
+    QLabel *unitHTO = new QLabel(tr("s"));
+
+    //line edit width
+    heartbeatTimeOut->setMaximumWidth(40);
+    //set default value
+    heartbeatTimeOut->setText(setting.value("heartbeattimeout",30).toString());
+    *heartbeatTimeOutArg = QStringList()<<"-e"<<setting.value("heartbeattimeout",30).toString();
+    *CVHeatBTO = setting.value("heartbeattimeout",30).toString();
+
+    //set layout
+    QHBoxLayout *heartbeatTimeOutLayout = new QHBoxLayout;
+    heartbeatTimeOutLayout->addWidget(heartbeatTimeOutName);
+    heartbeatTimeOutLayout->addStretch();
+    heartbeatTimeOutLayout->addWidget(heartbeatTimeOut);
+    heartbeatTimeOutLayout->addWidget(unitHTO);
+
+    connect(waitFailTimeOut,SIGNAL(textChanged(QString)), this, SLOT(saveHeartbeatTimeOut(QString)));
+
+    // 10. imitated client version
+    CVClientVer= new QString;
+    clientVersionName= new QLabel(tr("Client Version:"));
+    clientVersionName->setToolTip(tr("The version of authentification client to imitate[default to 0.00, compatible with xrgsu]."));
+    clientVersion = new QLineEdit;
+    clientVersionArg = new QStringList;
+
+    //line edit width
+    clientVersion->setMaxLength(4);
+    clientVersion->setMaximumWidth(57);
+    //set default value
+    clientVersion->setText(setting.value("clientversion","0.00").toString());
+    *clientVersionArg = QStringList()<<"-v"<<setting.value("clientversion","0.00").toString();
+    *CVClientVer = setting.value("clientversion","0.00").toString();
+
+    //set layout
+    QHBoxLayout *clientVersionLayout = new QHBoxLayout;
+    clientVersionLayout->addWidget(clientVersionName);
+    clientVersionLayout->addStretch();
+    clientVersionLayout->addWidget(clientVersion);
+
+    connect(clientVersion,SIGNAL(textChanged(QString)), this, SLOT(saveClientVersion(QString)));
+
+    // set the whole layout of configure window
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(clientVersionLayout);
+    mainLayout->addLayout(heartbeatTimeOutLayout);
+    mainLayout->addLayout(waitFailTimeOutLayout);
+    mainLayout->addLayout(maxFailTimesLayout);
     mainLayout->addLayout(authTimeOutLayout);
     mainLayout->addLayout(dhcpTypeLayout);
     mainLayout->addLayout(dispNotifLayout);
@@ -167,8 +260,6 @@ ConfigWindow::ConfigWindow(QWidget *parent)
     setFixedHeight(sizeHint().height());
 
     args=new QStringList;
-    //Net cards selection
-
 
 
 }
@@ -191,7 +282,7 @@ void ConfigWindow::showNetCards()
 void ConfigWindow::confirmClicked()
 {
 
-    QSettings setting("Aten","Gmentohust");
+    QSettings setting("WarMtH","warmth");
     CVNetCard->isEmpty()?*netCardArg=QStringList():*netCardArg = QStringList()<<"-n"<<*CVNetCard;
     setting.setValue("netcard",*CVNetCard);
 
@@ -206,6 +297,18 @@ void ConfigWindow::confirmClicked()
 
     *authTimeOutArg=QStringList()<<"-t"<<*CVAuthTO;
     setting.setValue("authtimeout",CVAuthTO->toInt());
+
+    *maxFailTimesArg=QStringList()<<"-l"<<*CVMaxFT;
+    setting.setValue("maxfailtimes",CVMaxFT->toInt());
+
+    *waitFailTimeOutArg=QStringList()<<"-r"<<*CVWaitFTO;
+    setting.setValue("failtimeout",CVWaitFTO->toInt());
+
+    *heartbeatTimeOutArg=QStringList()<<"-e"<<*CVHeatBTO;
+    setting.setValue("heartbeattimeout",CVHeatBTO->toInt());
+
+    *clientVersionArg=QStringList()<<"-v"<<*CVClientVer;
+    setting.setValue("clientversion",*CVClientVer);
 
     close();
 }
@@ -248,11 +351,35 @@ void ConfigWindow::saveAuthTimeOut(const QString time)
     *CVAuthTO = time;
 }
 
+void ConfigWindow::saveMaxFailTimes(const QString times)
+{
+    *CVMaxFT = times;
+}
+
+void ConfigWindow::saveWaitFailTimeOut(const QString time)
+{
+    *CVWaitFTO = time;
+}
+
+void ConfigWindow::saveHeartbeatTimeOut(const QString time)
+{
+    *CVHeatBTO = time;
+}
+
+void ConfigWindow::saveClientVersion(const QString version)
+{
+    *CVClientVer = version;
+}
+
 void ConfigWindow::setArgs()
 {
     *args = QStringList()<<netCardArg->join("")
-           <<mulCastAdrArg->join("")
-           <<dispNotifArg->join("")
-           <<dhcpTypeArg->join("")
-           <<authTimeOutArg->join("");
+            <<mulCastAdrArg->join("")
+            <<dispNotifArg->join("")
+            <<dhcpTypeArg->join("")
+            <<authTimeOutArg->join("")
+            <<maxFailTimesArg->join("")
+            <<waitFailTimeOutArg->join("")
+            <<heartbeatTimeOutArg->join("")
+            <<clientVersionArg->join("");
 }

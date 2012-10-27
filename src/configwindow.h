@@ -1,20 +1,20 @@
 /***************************************************************************
  *  Copyright (c) 2012 by Aten Zhang <atenzd@gmail.com>                    *
  *                                                                         *
- *  This file is part of gMentoHust.                                       *
+ *  This file is part of WarMtH.                                       *
  *                                                                         *
- *  gMentoHust is free software: you can redistribute it and/or modify     *
+ *  WarMtH is free software: you can redistribute it and/or modify     *
  *  it under the terms of the GNU General Public License as published by   *
  *  the Free Software Foundation, either version 3 of the License, or      *
  *  (at your option) any later version.                                    *
  *                                                                         *
- *  gMentoHust is distributed in the hope that it will be useful,          *
+ *  WarMtH is distributed in the hope that it will be useful,          *
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
  *  GNU General Public License for more details.                           *
  *                                                                         *
  *  You should have received a copy of the GNU General Public License      *
- *  along with gMentoHust.  If not, see <http://www.gnu.org/licenses/>.    *
+ *  along with WarMtH.  If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 #ifndef CONFIGWINDOW_H
 #define CONFIGWINDOW_H
@@ -56,10 +56,12 @@ private slots:
     void saveDispNotif(const QString time);
     void saveDhcpType(const int index);
     void saveAuthTimeOut(const QString time);
+    void saveMaxFailTimes(const QString times);
+    void saveWaitFailTimeOut(const QString time);
+    void saveHeartbeatTimeOut(const QString time);
+    void saveClientVersion(const QString version);
 
 private:
-    //void createNetCardSelect();
-    //void createMulcastSelect();
     void setArgs();
     QStringList *args;
 
@@ -75,7 +77,7 @@ private:
     QLabel *mulCastAdrName;
     QComboBox *mulCastAdr;
     QStringList *mulCastAdrArg;
-    int CVMulAdr;               // save current value of mulcast address
+    int CVMulAdr;               // save current combobox index of mulcast address
 
     QLabel *dispNotif;
     QLineEdit *dispNotifTime;
@@ -85,12 +87,32 @@ private:
     QLabel *dhcpTypeName;
     QComboBox *dhcpType;
     QStringList *dhcpTypeArg;
-    int CVDhcpType;             // save current value of DHCP type
+    int CVDhcpType;             // save current combobox index of DHCP type
 
     QLabel *authTimeOutName;
     QLineEdit *authTimeOut;
     QStringList *authTimeOutArg;
     QString *CVAuthTO;          // save current value of authenticate timeout
+
+    QLabel *maxFailTimesName;
+    QLineEdit *maxFailTimes;
+    QStringList *maxFailTimesArg;
+    QString *CVMaxFT;           // save current value of max failure times
+
+    QLabel *waitFailTimeOutName;
+    QLineEdit *waitFailTimeOut;
+    QStringList *waitFailTimeOutArg;
+    QString *CVWaitFTO;         // save current value of waiting on failure timeout
+
+    QLabel *heartbeatTimeOutName;
+    QLineEdit *heartbeatTimeOut;
+    QStringList *heartbeatTimeOutArg;
+    QString *CVHeatBTO;         // save current value of heartbeat timeout
+
+    QLabel *clientVersionName;
+    QLineEdit *clientVersion;
+    QStringList *clientVersionArg;
+    QString *CVClientVer;       // save current value of imitated client version
 };
 
 #endif // CONFIGWINDOW_H

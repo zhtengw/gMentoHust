@@ -8,11 +8,10 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = gMentoHust
+TARGET = warmth
 TEMPLATE = app
 VERSION = 1.0
 
-INSTALL_ROOT = $$DESTDIR
 DEPENDPATH += . src
 INCLUDEPATH += . src
 
@@ -22,6 +21,8 @@ SOURCES += src/configwindow.cpp src/main.cpp src/mainwindow.cpp src/authmsgwindo
 
 RESOURCES += \
     images/images.qrc
+RC_FILE += \
+    images/icon.rc
 
 OTHER_FILES += \
     README \
