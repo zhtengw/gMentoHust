@@ -18,6 +18,9 @@
  ***************************************************************************/
 #include <QTextCodec>
 #include <QApplication>
+#include <QDesktopWidget>
+#include <QPalette>
+#include <QBitmap>
 
 #include "authmsgwindow.h"
 #include "mainwindow.h"
@@ -53,9 +56,23 @@ AuthMsgWindow::AuthMsgWindow(QWidget *parent)
     mainLayout->addWidget(authMsg);
     mainLayout->addLayout(buttons);
 
-    setLayout(mainLayout);
+//trying to set a transparent background image
+    //setAutoFillBackground(true);
+    //QPalette pal = this->palette();
+    //pal.setBrush(QPalette::Background,QBrush(QPixmap(":/bg.png")));
+    //setPalette(pal);
     setWindowTitle(tr("Authentication"));
+    setWindowFlags(Qt::FramelessWindowHint); // not show the window frame
+    //setMask(QPixmap(":/bg.png").mask());
+    //setWindowOpacity(1);
+    //setAttribute(Qt::WA_TranslucentBackground);
+    //setObjectName("authmsgwindow");
+    //setStyleSheet("#authmsgwindow{border-image:url(:/bg.png);}");
+    setLayout(mainLayout);
+
+    // resize first and then it can be move to the center of the screen
     resize(374,200);
+    move((QApplication::desktop()->width()-this->width())/2,(QApplication::desktop()->height()-this->height())/2);
 
     connect(exitButton, SIGNAL(clicked()), this, SLOT(exitClicked()));
     connect(miniButton, SIGNAL(clicked()), this, SLOT(miniClicked()));

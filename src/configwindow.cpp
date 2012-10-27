@@ -49,6 +49,8 @@ ConfigWindow::ConfigWindow(QWidget *parent)
     //netCardSelect->setEditable(true);
     //QLineEdit *edit = netCardSelect->lineEdit();
 
+    //get active net card from system, it is a simple and stupid implementation,
+    //it should be rewriten some day.
     getNetCard= new QProcess;
     getNetCard->start("/bin/ls -1 /proc/net/dev_snmp6");
     connect(getNetCard, SIGNAL(readyReadStandardOutput()), this, SLOT(showNetCards()));

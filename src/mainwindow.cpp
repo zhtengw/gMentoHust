@@ -107,6 +107,9 @@ void MainWindow::createAuthMW()
     connect(authMW, SIGNAL(destroyed()), this, SLOT(show()));
     connect(authMW, SIGNAL(destroyed()), this, SLOT(createAuthMW()));
 
+    //authMW->setObjectName("authmsgwindow");
+    //authMW->setStyleSheet("#authmsgwindow{border-image:url(:/bg.png);}");
+
 }
 void MainWindow::authClicked()
 {
