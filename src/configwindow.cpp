@@ -27,8 +27,8 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
     //Widgets on configuration window
     // 1. Confirm and Exit buttons
-    confirmButton = new QPushButton(tr("Confirm"));
-    cancelButton = new QPushButton(tr("Cancel"));
+    confirmButton = new QPushButton(tr("Confir&m"));
+    cancelButton = new QPushButton(tr("Canc&el"));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
     connect(confirmButton, SIGNAL(clicked()), this, SLOT(confirmClicked()));
 
@@ -253,5 +253,6 @@ void ConfigWindow::setArgs()
     *args = QStringList()<<netCardArg->join("")
            <<mulCastAdrArg->join("")
            <<dispNotifArg->join("")
-           <<dhcpTypeArg->join("");
+           <<dhcpTypeArg->join("")
+           <<authTimeOutArg->join("");
 }

@@ -31,25 +31,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     //authMW = new AuthMsgWindow;
     //confW = new ConfigWindow;
-    netid = new QLabel(tr("NetID:"));
+    netid = new QLabel(tr("&NetID:"));
     idEdit = new QLineEdit;
     netid->setBuddy(idEdit);
     idEdit->setText(setting.value("netid","").toString());
 
-    passwd = new QLabel(tr("Password:"));
+    passwd = new QLabel(tr("&Password:"));
     pdEdit = new QLineEdit;
     pdEdit->setEchoMode(QLineEdit::Password);
     passwd->setBuddy(pdEdit);
     pdEdit->setText(getXorEncryptDecrypt(setting.value("password","").toString(),111));
 
-    rembCheckBox = new QCheckBox(tr("Remember for next authification"));
+    rembCheckBox = new QCheckBox(tr("&Remember for next authification"));
 
-    authButton = new QPushButton(tr("Authenticate"));
+    authButton = new QPushButton(tr("&Authenticate"));
     authButton->setDefault(true);
     authButton->setEnabled(false);
 
-    closeButton = new QPushButton(tr("Close"));
-    configButton = new QPushButton(tr("Configure"));
+    closeButton = new QPushButton(tr("Clos&e"));
+    configButton = new QPushButton(tr("&Configure"));
 
     createAuthMW();
     createCfgWd();
@@ -60,7 +60,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
-    //connect(configButton,SIGNAL(clicked()),this,SLOT(openCfgWd()));
 
     connect(rembCheckBox, SIGNAL(stateChanged(int)), this, SLOT(saveID(int)));
 
@@ -117,7 +116,9 @@ void MainWindow::authClicked()
 
     authMW->setArgs(tempid, temppd);
     confW->setArgs();
-    authMW->backend->start("mentohust", *authMW->args<<*confW->args);
+    *authMW->args=*authMW->args<<*confW->args;
+    *authMW->backendName=QString("mentohust");
+    authMW->backend->start(*authMW->backendName, *authMW->args);
     if (QSystemTrayIcon::isSystemTrayAvailable())
     {
         authMW->sysTrayIcon->show();

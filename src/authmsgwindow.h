@@ -27,6 +27,7 @@
 #include <QString>
 #include <QIcon>
 #include <QMenu>
+#include <QBoxLayout>
 
 class AuthMsgWindow : public QDialog
 {
@@ -48,6 +49,8 @@ private slots:
     void miniClicked();
     void trayIconAct(QSystemTrayIcon::ActivationReason reason);
     void showMessage();
+    void changeButton(const int &num);
+    void reAuth();
 
 private:
     void setArgs(const QString &id, const QString &pd);
@@ -57,7 +60,10 @@ private:
     QTextEdit *authMsg;
     QPushButton *exitButton;
     QPushButton *miniButton;
+    QPushButton *reauthButton;
+    QHBoxLayout *buttons;
     QProcess *backend;
+    QString *backendName;
     QStringList *args;
     QSystemTrayIcon *sysTrayIcon;
     QMenu *trayIconMenu;

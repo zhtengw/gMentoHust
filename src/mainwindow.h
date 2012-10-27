@@ -40,6 +40,10 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    friend class AuthMsgWindow;
+
+//public slots:
+//    void authClicked();
 private slots:
     void createAuthMW();
     void authClicked();

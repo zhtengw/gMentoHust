@@ -25,8 +25,9 @@
 AuthMsgWindow::AuthMsgWindow(QWidget *parent)
         : QDialog(parent)
 {
-    exitButton = new QPushButton(tr("Exit"));
-    miniButton = new QPushButton(tr("Minimize"));
+    exitButton = new QPushButton(tr("&Exit"));
+    miniButton = new QPushButton(tr("&Minimize"));
+    reauthButton = new QPushButton(tr("&Re-authenticate"));
     authMsg = new QTextEdit;
     args = new QStringList;
     sysTrayIcon = new QSystemTrayIcon(QIcon(":/gmentohust.png"));
@@ -41,28 +42,31 @@ AuthMsgWindow::AuthMsgWindow(QWidget *parent)
 
     authMsg->setReadOnly(true);
 
-    QHBoxLayout *buttons = new QHBoxLayout;
+    buttons = new QHBoxLayout;
     buttons->addWidget(miniButton);
     buttons->addWidget(exitButton);
+    //reauthenticate button's on the same position as minimize button
+    buttons->insertWidget(1,reauthButton);
+    reauthButton->hide();
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(authMsg);
     mainLayout->addLayout(buttons);
 
     setLayout(mainLayout);
-    setWindowTitle(tr("Success!"));
+    setWindowTitle(tr("Authentication"));
     resize(374,200);
 
     connect(exitButton, SIGNAL(clicked()), this, SLOT(exitClicked()));
     connect(miniButton, SIGNAL(clicked()), this, SLOT(miniClicked()));
+    connect(reauthButton,SIGNAL(clicked()),this, SLOT(reAuth()));
 
+    backendName = new QString;
     backend = new QProcess(this);
     backend->setProcessChannelMode(QProcess::MergedChannels);
     connect(backend, SIGNAL(readyReadStandardOutput()), this, SLOT(readresult()));
-    //connect(this, SIGNAL(authMWhidden()), authMsg, SLOT(clear()));
-    //connect(backend, SIGNAL(started()), this, SLOT(readresult()));
-
-    //backend->start("mentohust", *args);
+    //show reauthenticate button when authenticate fail
+    connect(backend,SIGNAL(finished(int)),this,SLOT(changeButton(int)));
 
 }
 
@@ -91,7 +95,6 @@ void AuthMsgWindow::exitClicked()
 {
     QProcess *exitMTH = new QProcess;
     exitMTH->start("mentohust -k");
-    delete exitMTH;
     if(!this->isHidden())this->hide();
     //emit authMWhidden();
     delete this->sysTrayIcon;
@@ -111,6 +114,21 @@ void AuthMsgWindow::miniClicked()
         this->hide();
     }
     else this->showMinimized();
+}
+
+void AuthMsgWindow::reAuth()
+{
+    backend->start(*backendName,*args);
+    reauthButton->hide();
+    miniButton->show();
+
+}
+
+void AuthMsgWindow::changeButton(const int &num)
+{
+    //hide minimize button and show reauthenticate button
+    miniButton->hide();
+    reauthButton->show();
 }
 
 void AuthMsgWindow::trayIconAct(QSystemTrayIcon::ActivationReason reason)
